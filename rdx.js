@@ -487,13 +487,62 @@ function downloadJSONFromFrame8() {
 
 const jsonData = {
     "elements": [
-        { "value": "王小明", "x": 0.5, "y": 0.3, "size": 16, "icon": "none" },
-        { "value": "學生", "x": 0.5, "y": 0.4, "size": 12, "icon": "none" },
-        { "value": "成功大學", "x": 0.2, "y": 0.7, "size": 12, "icon": "none" },
-        { "value": "數學系", "x": 0.2, "y": 0.8, "size": 12, "icon": "none" },
-        { "value": "0912123456", "x": 0.2, "y": 0.7, "size": 12, "icon": "phone" },
-        { "value": "abc123@mail.com", "x": 0.2, "y": 0.7, "size": 12, "icon": "envelope" },
-        { "value": "abc123", "x": 0.2, "y": 0.7, "size": 12, "icon": "brands-facebook" },
-        { "value": "abc456", "x": 0.2, "y": 0.7, "size": 12, "icon": "brands-twitter" }
+        {
+            "value": "王小明",
+            "x": 0.51,
+            "y": 0.3,
+            "size": 16,
+            "icon": "none"
+        },
+        {
+            "value": "學生",
+            "x": 0.52,
+            "y": 0.38,
+            "size": 12,
+            "icon": "none"
+        },
+        {
+            "value": "成功大學",
+            "x": 0.14999999999999997,
+            "y": 0.5499999999999998,
+            "size": 12,
+            "icon": "none"
+        },
+        {
+            "value": "數學系",
+            "x": 0.182,
+            "y": 0.6159999999999999,
+            "size": 12,
+            "icon": "none"
+        },
+        {
+            "value": "0912123456",
+            "x": 0.5200000000000002,
+            "y": 0.69,
+            "size": 12,
+            "icon": "phone"
+        },
+        {
+            "value": "abc123@mail.com",
+            "x": 0.5200000000000002,
+            "y": 0.6199999999999999,
+            "size": 12,
+            "icon": "envelope"
+        },
+        {
+            "value": "abc123",
+            "x": 0.5200000000000002,
+            "y": 0.76,
+            "size": 12,
+            "icon": "brands-facebook"
+        },
+        {
+            "value": "abc456",
+            "x": 0.5200000000000002,
+            "y": 0.5429999999999998,
+            "size": 12,
+            "icon": "brands-twitter"
+        }
     ]
 };
+
