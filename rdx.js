@@ -36,6 +36,27 @@ function attachBton() {
             downloadJSONFromFrame8();
         });
     });
+
+    document.querySelectorAll('.DEVONLYdownloadPDF').forEach(el => {
+        el.addEventListener('click', async () => {
+            try {
+                const blob = await DOALL();
+                if (blob) {
+                    // Create download link
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'business-card.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }
+            } catch (error) {
+                console.error('Error generating image:', error);
+            }
+        });
+    });
 }
 
 function renderBC(data) {
@@ -330,7 +351,7 @@ function renderBC(data) {
 
         function changeFontSize(idx, delta) {
             const bcItem = document.querySelector(`#bc-item-${idx}`);
-            
+
             // Find the frame9 element by its class name and data-idx attribute
             const frame9 = document.querySelector(`.desktop1-frame9[data-idx="${idx}"]`);
 
@@ -338,10 +359,10 @@ function renderBC(data) {
                 const currentSize = parseInt(bcItem.style.fontSize) || 14;
                 const newSize = Math.max(8, currentSize + delta);
                 bcItem.style.fontSize = newSize + 'px';
-                
+
                 // Update the data-size attribute in frame9
                 frame9.setAttribute('data-size', newSize);
-                
+
                 _jf.flush();
             }
         }
@@ -491,6 +512,53 @@ function downloadJSONFromFrame8() {
 
     console.log('JSON downloaded with', elements.length, 'elements');
     return jsonData;
+}
+
+async function DOALL(type = 'png') {
+    const node = document.querySelector('.mainBC');
+    if (!node) {
+        console.error('mainBC element not found');
+        return null;
+    }
+
+    try {
+        // wait for fonts (optional, avoids blank text)
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+
+        const canvas = await html2canvas(node, {
+            useCORS: true,
+            scale: window.devicePixelRatio || 1,
+            backgroundColor: type === 'png' ? null : '#ffffff'
+        });
+
+        const mime = type === 'jpg' ? 'image/jpeg' : 'image/png';
+        const ext = type === 'jpg' ? 'jpg' : 'png';
+
+        // Return a Promise that resolves with the blob
+        return new Promise((resolve) => {
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    resolve(blob);
+                } else {
+                    console.error('Failed to create blob from canvas');
+                    resolve(null);
+                }
+                /*
+                Future enhancement: 合併成一張A4 確切規格如下
+                blob 10 份
+                2 COL 5 ROW
+                單個高度 5.4CM 寬度 9.0CM
+
+                採 1200 DPI
+
+                上邊界 1.3CM 側邊界 1.5CM
+                */
+            }, mime, 1.0);
+        });
+    } catch (error) {
+        console.error('Error in DOALL function:', error);
+        return null;
+    }
 }
 
 const jsonData = {
