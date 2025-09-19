@@ -23,7 +23,7 @@ function renderBC(data) {
             div.style.position = 'absolute';
             div.style.left = x + 'px';
             div.style.top = y + 'px';
-            div.style.transform = 'translate(-50%, -50%)'; // center on point
+            div.style.transform = 'translate(0%, -50%)'; // center y but not x ********on point
             div.style.fontSize = size + 'px';
             div.style.display = 'inline-flex';
             div.style.alignItems = 'center';
