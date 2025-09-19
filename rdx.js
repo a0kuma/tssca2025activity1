@@ -330,10 +330,18 @@ function renderBC(data) {
 
         function changeFontSize(idx, delta) {
             const bcItem = document.querySelector(`#bc-item-${idx}`);
-            if (bcItem) {
+            
+            // Find the frame9 element by its class name and data-idx attribute
+            const frame9 = document.querySelector(`.desktop1-frame9[data-idx="${idx}"]`);
+
+            if (bcItem && frame9) {
                 const currentSize = parseInt(bcItem.style.fontSize) || 14;
                 const newSize = Math.max(8, currentSize + delta);
                 bcItem.style.fontSize = newSize + 'px';
+                
+                // Update the data-size attribute in frame9
+                frame9.setAttribute('data-size', newSize);
+                
                 _jf.flush();
             }
         }
