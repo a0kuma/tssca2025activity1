@@ -30,6 +30,12 @@ function attachBton() {
             });
         });
     });
+
+    document.querySelectorAll('.DEVONLYdownloadJSON').forEach(el => {
+        el.addEventListener('click', () => {
+            downloadJSONFromFrame8();
+        });
+    });
 }
 
 function renderBC(data) {
