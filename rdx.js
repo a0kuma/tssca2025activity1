@@ -1,3 +1,37 @@
+function attachBton() {
+    //!important![區段起始] FA 樣式
+    document.querySelectorAll('.inline-icon-fa').forEach(el => {
+        const faBits = [...el.classList]
+            .filter(cls => cls.startsWith('ifa-'))
+            .map(cls => 'fa-' + cls.slice(4)); // "ifa-solid" -> "fa-solid"
+
+        if (faBits.length === 0) return;                 // nothing to do
+        if (el.querySelector('i[data-auto-fa]')) return; // already injected
+
+        const icon = document.createElement('i');
+        icon.setAttribute('aria-hidden', 'true');
+        icon.dataset.autoFa = '1'; // marker to prevent duplicates
+        icon.classList.add(...faBits);
+
+        el.appendChild(icon);
+    });
+    //!important![區段起始] SW2 (預)
+    document.querySelectorAll('.notyet').forEach(el => {
+        el.addEventListener('click', () => {
+            Swal.fire({
+                icon: 'info',
+                title: 'Notice',
+                html: '<p class="lihsianti">很抱歉，這個網站的這個功能正在開發中</p>',
+                showCloseButton: true,
+                confirmButtonText: 'OK',
+                didOpen: () => {
+                    _jf.flush();
+                }
+            });
+        });
+    });
+}
+
 function renderBC(data) {
     if (!data || !Array.isArray(data.elements)) return;
 
@@ -430,17 +464,17 @@ function downloadJSONFromFrame8() {
     const dataStr = JSON.stringify(jsonData, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
-    
+
     const link = document.createElement('a');
     link.href = url;
     link.download = 'frame8-data.json';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     // Clean up the URL object
     URL.revokeObjectURL(url);
-    
+
     console.log('JSON downloaded with', elements.length, 'elements');
     return jsonData;
 }
