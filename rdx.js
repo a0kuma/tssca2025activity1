@@ -46,7 +46,7 @@ function attachBton() {
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.href = url;
-                    link.download = 'business-card.png';
+                    link.download = 'business-cards-a4-layout.png';
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -534,31 +534,71 @@ async function DOALL(type = 'png') {
         const mime = type === 'jpg' ? 'image/jpeg' : 'image/png';
         const ext = type === 'jpg' ? 'jpg' : 'png';
 
-        // Return a Promise that resolves with the blob
-        return new Promise((resolve) => {
-            canvas.toBlob((blob) => {
-                if (blob) {
-                    resolve(blob);
-                } else {
-                    console.error('Failed to create blob from canvas');
-                    resolve(null);
-                }
-                /*
-                Future enhancement: 合併成一張A4 確切規格如下
-                blob 10 份
-                2 COL 5 ROW
-                單個高度 5.4CM 寬度 9.0CM
-
-                採 1200 DPI
-
-                上邊界 1.3CM 側邊界 1.5CM
-                */
-            }, mime, 1.0);
-        });
+        // Create A4 layout with 10 copies (2 columns, 5 rows)
+        return createA4Layout(canvas, mime);
     } catch (error) {
         console.error('Error in DOALL function:', error);
         return null;
     }
+}
+
+// Create A4 layout with 10 business cards (2 columns, 5 rows)
+function createA4Layout(singleCardCanvas, mime) {
+    return new Promise((resolve) => {
+        // DPI setting
+        const dpi = 1200;
+        
+        // Card dimensions
+        const cardWidthMM = 90;
+        const cardHeightMM = 54;
+        const cardWidthPx = Math.round((cardWidthMM / 25.4) * dpi); // ~4252px
+        const cardHeightPx = Math.round((cardHeightMM / 25.4) * dpi); // ~2551px
+        
+        // Margins
+        const topMarginMM = 13;
+        const bottomMarginMM = 13; // 假設下邊界也是1.3cm
+        const sideMarginMM = 15;
+        const topMarginPx = Math.round((topMarginMM / 25.4) * dpi);
+        const bottomMarginPx = Math.round((bottomMarginMM / 25.4) * dpi);
+        const sideMarginPx = Math.round((sideMarginMM / 25.4) * dpi);
+        
+        // Calculate A4 dimensions based on content
+        // Width: 側邊界 + 寬度*2 + 側邊界
+        const a4WidthPx = sideMarginPx + (cardWidthPx * 2) + sideMarginPx;
+        // Height: 上邊界 + 高度*5 + 下邊界
+        const a4HeightPx = topMarginPx + (cardHeightPx * 5) + bottomMarginPx;
+        
+        // Create A4 canvas
+        const a4Canvas = document.createElement('canvas');
+        a4Canvas.width = a4WidthPx;
+        a4Canvas.height = a4HeightPx;
+        const ctx = a4Canvas.getContext('2d');
+        
+        // Fill with white background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, a4WidthPx, a4HeightPx);
+        
+        // Draw 10 cards (2 columns, 5 rows) with no spacing between cards
+        for (let row = 0; row < 5; row++) {
+            for (let col = 0; col < 2; col++) {
+                const x = sideMarginPx + col * cardWidthPx;
+                const y = topMarginPx + row * cardHeightPx;
+                
+                // Draw the single card canvas onto the A4 canvas, scaled to fit card dimensions
+                ctx.drawImage(singleCardCanvas, x, y, cardWidthPx, cardHeightPx);
+            }
+        }
+        
+        // Convert A4 canvas to blob
+        a4Canvas.toBlob((blob) => {
+            if (blob) {
+                resolve(blob);
+            } else {
+                console.error('Failed to create A4 layout blob');
+                resolve(null);
+            }
+        }, mime, 1.0);
+    });
 }
 
 const jsonData = {
